@@ -13,7 +13,7 @@ http://www.altova.com/mapforce
 	<xsl:param name="status" as="xs:string?" select="()"/>
 	<xsl:template match="/">
 		<patientDataFact>
-			<xsl:attribute name="xsi:noNamespaceSchemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance" select="'JSONFact_Problem.xsd'"/>
+			<xsl:attribute name="xsi:noNamespaceSchemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance" select="'C:/Users/JERRYG~1/Dropbox/Cognitive/CDS/JSONFact_Problem.xsd'"/>
 			<factType>Diagnoses</factType>
 			<xsl:for-each select="ns0:ProblemList">
 				<xsl:variable name="var7_resultof_filter" as="node()*">
@@ -59,37 +59,41 @@ http://www.altova.com/mapforce
 				</xsl:variable>
 				<xsl:for-each select="$var7_resultof_filter">
 					<xsl:variable name="var8_id" as="node()?" select="@id"/>
-					<xsl:variable name="var9_resultof_first" as="node()" select="ns0:code"/>
-					<xsl:variable name="var10_coding" as="node()*" select="$var9_resultof_first/ns0:coding"/>
+					<xsl:variable name="var9_extension" as="node()*" select="ns0:extension"/>
+					<xsl:variable name="var10_resultof_first" as="node()" select="ns0:code"/>
+					<xsl:variable name="var11_coding" as="node()*" select="$var10_resultof_first/ns0:coding"/>
 					<facts>
-						<lastRecordedDate>
-							<xsl:sequence select="xs:string(xs:date('2000-01-01'))"/>
-						</lastRecordedDate>
-						<xsl:for-each select="($var9_resultof_first/ns0:text)[fn:exists(@value)]">
+						<xsl:for-each select="$var9_extension">
+							<xsl:variable name="var12_cur" as="node()" select="."/>
+							<xsl:for-each select="(ns0:valueDate[fn:exists(@value)][fn:exists($var12_cur/ns0:url/@value)])[(xs:string(xs:anyURI(fn:string($var12_cur/ns0:url/@value))) = 'org.socraticgrid.constant.dateUpdated')]">
+								<lastRecordedDate>
+									<xsl:sequence select="xs:string(xs:date(fn:string(@value)))"/>
+								</lastRecordedDate>
+							</xsl:for-each>
+						</xsl:for-each>
+						<xsl:for-each select="($var10_resultof_first/ns0:text)[fn:exists(@value)]">
 							<problem>
 								<xsl:sequence select="fn:string(@value)"/>
 							</problem>
 						</xsl:for-each>
-						<xsl:for-each select="($var10_coding/ns0:code)[fn:exists(@value)]">
+						<xsl:for-each select="($var11_coding/ns0:code)[fn:exists(@value)]">
 							<code>
 								<xsl:sequence select="fn:string(@value)"/>
 							</code>
 						</xsl:for-each>
-						<xsl:for-each select="($var10_coding/ns0:system)[fn:exists(@value)]">
+						<xsl:for-each select="($var11_coding/ns0:system)[fn:exists(@value)]">
 							<codeSystemName>
-								<xsl:sequence select="fn:concat(xs:string(xs:anyURI(fn:string(@value))), ' not translated')"/>
+								<xsl:sequence select="fn:concat(xs:string(xs:anyURI(fn:string(@value))), ' oid not available')"/>
 							</codeSystemName>
 						</xsl:for-each>
-						<xsl:for-each select="($var10_coding/ns0:system)[fn:exists(@value)]">
+						<xsl:for-each select="($var11_coding/ns0:system)[fn:exists(@value)]">
 							<codeSystemCode>
 								<xsl:sequence select="xs:string(xs:anyURI(fn:string(@value)))"/>
 							</codeSystemCode>
 						</xsl:for-each>
-						<xsl:for-each select="ns0:dateAsserted[fn:exists(@value)]">
-							<xsl:variable name="var11_resultof_cast" as="xs:double" select="xs:double(xs:decimal('2'))"/>
-							<xsl:variable name="var12_resultof_cast" as="xs:string" select="fn:string(@value)"/>
+						<xsl:for-each select="ns0:onsetDate[fn:exists(@value)]">
 							<onset>
-								<xsl:sequence select="xs:string(xs:date(fn:concat(fn:concat(fn:concat(fn:concat(fn:substring($var12_resultof_cast, xs:double(xs:decimal('1')), xs:double(xs:decimal('4'))), '-'), fn:substring($var12_resultof_cast, xs:double(xs:decimal('5')), $var11_resultof_cast)), '-'), fn:substring($var12_resultof_cast, xs:double(xs:decimal('7')), $var11_resultof_cast))))"/>
+								<xsl:sequence select="xs:string(xs:date(fn:string(@value)))"/>
 							</onset>
 						</xsl:for-each>
 						<xsl:if test="fn:exists($var8_id)">
@@ -102,7 +106,7 @@ http://www.altova.com/mapforce
 								<xsl:sequence select="fn:string(@value)"/>
 							</status>
 						</xsl:for-each>
-						<xsl:for-each select="ns0:extension">
+						<xsl:for-each select="$var9_extension">
 							<xsl:variable name="var13_cur" as="node()" select="."/>
 							<xsl:for-each select="(((ns0:valueCodeableConcept/ns0:coding/ns0:display)[fn:exists(@value)])[fn:exists($var13_cur/ns0:url/@value)])[(xs:string(xs:anyURI(fn:string($var13_cur/ns0:url/@value))) = 'org.socraticgrid.constants.acuity')]">
 								<acuity>

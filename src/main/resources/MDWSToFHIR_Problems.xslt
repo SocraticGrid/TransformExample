@@ -8,12 +8,7 @@ OVERWRITTEN WHEN YOU RE-RUN CODE GENERATION.
 Refer to the Altova MapForce Documentation for further details.
 http://www.altova.com/mapforce
 -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns0="http://mdws.medora.va.gov/EmrSvc" xmlns:user="http://www.altova.com/MapForce/UDF/user" xmlns:vmf="http://www.altova.com/MapForce/UDF/vmf" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions" exclude-result-prefixes="ns0 user vmf xs fn">
-	<xsl:template name="user:FMDateToHL7">
-		<xsl:param name="FMdate" select="()"/>
-		<xsl:variable name="var1_resultof_cast" as="xs:double" select="xs:double(xs:decimal('4'))"/>
-		<xsl:sequence select="fn:concat(fn:concat(xs:string((xs:double(fn:substring($FMdate, xs:double(xs:decimal('1')), xs:double(xs:decimal('3')))) + xs:double('1700'))), fn:substring($FMdate, $var1_resultof_cast, $var1_resultof_cast)), fn:substring($FMdate, xs:double(xs:decimal('9')), xs:double(xs:decimal('6'))))"/>
-	</xsl:template>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns0="http://mdws.medora.va.gov/EmrSvc" xmlns:vmf="http://www.altova.com/MapForce/UDF/vmf" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2005/xpath-functions" exclude-result-prefixes="ns0 vmf xs fn">
 	<xsl:template name="vmf:vmf1_inputtoresult">
 		<xsl:param name="input" select="()"/>
 		<xsl:choose>
@@ -72,12 +67,12 @@ http://www.altova.com/mapforce
 					</xsl:for-each>
 				</xsl:variable>
 				<xsl:for-each select="$var4_resultof_filter">
-					<xsl:variable name="var5_unverified" as="node()?" select="ns0:unverified"/>
-					<xsl:variable name="var6_facility" as="node()?" select="ns0:facility"/>
-					<xsl:variable name="var7_acuity" as="node()?" select="ns0:acuity"/>
+					<xsl:variable name="var5_facility" as="node()?" select="ns0:facility"/>
+					<xsl:variable name="var6_acuity" as="node()?" select="ns0:acuity"/>
+					<xsl:variable name="var7_unverified" as="node()?" select="ns0:unverified"/>
 					<xsl:variable name="var8_provider" as="node()?" select="ns0:provider"/>
 					<xsl:variable name="var10_resultof_map" as="node()?">
-						<xsl:for-each select="$var7_acuity">
+						<xsl:for-each select="$var6_acuity">
 							<xsl:variable name="var9_resultof_cast" as="xs:string" select="fn:string(@name)"/>
 							<xsl:attribute name="value" namespace="" select="$var9_resultof_cast"/>
 						</xsl:for-each>
@@ -88,7 +83,7 @@ http://www.altova.com/mapforce
 						</xsl:for-each>
 					</xsl:variable>
 					<xsl:variable name="var12_resultof_map" as="node()?">
-						<xsl:for-each select="$var5_unverified">
+						<xsl:for-each select="$var7_unverified">
 							<xsl:attribute name="value" namespace="">
 								<xsl:call-template name="vmf:vmf2_inputtoresult">
 									<xsl:with-param name="input" select="xs:string(xs:integer(fn:string(@value)))" as="xs:string"/>
@@ -110,7 +105,7 @@ http://www.altova.com/mapforce
 										<xsl:attribute name="value" namespace="" select="xs:string(xs:anyURI('VAAcuity'))"/>
 									</system>
 									<code>
-										<xsl:for-each select="$var7_acuity">
+										<xsl:for-each select="$var6_acuity">
 											<xsl:attribute name="value" namespace="" select="fn:string(@code)"/>
 										</xsl:for-each>
 									</code>
@@ -129,15 +124,10 @@ http://www.altova.com/mapforce
 							</url>
 							<valueDate>
 								<xsl:for-each select="ns0:updated">
-									<xsl:variable name="var13_resultof_cast" as="xs:string" select="xs:string(xs:integer(fn:string(@value)))"/>
-									<xsl:variable name="var14_resultof_FMDateToHL_" as="xs:string?">
-										<xsl:call-template name="user:FMDateToHL7">
-											<xsl:with-param name="FMdate" select="$var13_resultof_cast" as="xs:string"/>
-										</xsl:call-template>
-									</xsl:variable>
-									<xsl:if test="fn:exists($var14_resultof_FMDateToHL_)">
-										<xsl:attribute name="value" namespace="" select="$var14_resultof_FMDateToHL_"/>
-									</xsl:if>
+									<xsl:variable name="var13_resultof_cast" as="xs:double" select="xs:double(xs:decimal('2'))"/>
+									<xsl:variable name="var14_resultof_cast" as="xs:string" select="xs:string(xs:integer(fn:string(@value)))"/>
+									<xsl:variable name="var15_resultof_concat" as="xs:string" select="fn:concat(fn:concat(fn:concat(fn:concat(xs:string((xs:double(fn:substring($var14_resultof_cast, xs:double(xs:decimal('1')), xs:double(xs:decimal('3')))) + xs:double('1700'))), '-'), fn:substring($var14_resultof_cast, xs:double(xs:decimal('4')), $var13_resultof_cast)), '-'), fn:substring($var14_resultof_cast, xs:double(xs:decimal('6')), $var13_resultof_cast))"/>
+									<xsl:attribute name="value" namespace="" select="$var15_resultof_concat"/>
 								</xsl:for-each>
 							</valueDate>
 						</extension>
@@ -147,26 +137,26 @@ http://www.altova.com/mapforce
 									<Location>
 										<name>
 											<xsl:for-each select="ns0:location">
-												<xsl:variable name="var15_resultof_cast" as="xs:string" select="fn:string(@value)"/>
-												<xsl:attribute name="value" namespace="" select="$var15_resultof_cast"/>
+												<xsl:variable name="var16_resultof_cast" as="xs:string" select="fn:string(@value)"/>
+												<xsl:attribute name="value" namespace="" select="$var16_resultof_cast"/>
 											</xsl:for-each>
 										</name>
 									</Location>
 								</contained>
 								<name>
-									<xsl:for-each select="$var6_facility">
+									<xsl:for-each select="$var5_facility">
 										<xsl:attribute name="id" namespace="" select="xs:string(xs:integer(fn:string(@code)))"/>
 									</xsl:for-each>
-									<xsl:for-each select="$var6_facility">
-										<xsl:variable name="var16_resultof_cast" as="xs:string" select="fn:string(@name)"/>
-										<xsl:attribute name="value" namespace="" select="$var16_resultof_cast"/>
+									<xsl:for-each select="$var5_facility">
+										<xsl:variable name="var17_resultof_cast" as="xs:string" select="fn:string(@name)"/>
+										<xsl:attribute name="value" namespace="" select="$var17_resultof_cast"/>
 									</xsl:for-each>
 								</name>
 								<type>
 									<text>
 										<xsl:for-each select="ns0:service">
-											<xsl:variable name="var17_resultof_cast" as="xs:string" select="fn:string(@value)"/>
-											<xsl:attribute name="value" namespace="" select="$var17_resultof_cast"/>
+											<xsl:variable name="var18_resultof_cast" as="xs:string" select="fn:string(@value)"/>
+											<xsl:attribute name="value" namespace="" select="$var18_resultof_cast"/>
 										</xsl:for-each>
 									</text>
 								</type>
@@ -180,22 +170,17 @@ http://www.altova.com/mapforce
 							<display>
 								<xsl:sequence select="$var11_resultof_map"/>
 								<xsl:for-each select="$var8_provider">
-									<xsl:variable name="var18_resultof_cast" as="xs:string" select="fn:string(@name)"/>
-									<xsl:attribute name="value" namespace="" select="$var18_resultof_cast"/>
+									<xsl:variable name="var19_resultof_cast" as="xs:string" select="fn:string(@name)"/>
+									<xsl:attribute name="value" namespace="" select="$var19_resultof_cast"/>
 								</xsl:for-each>
 							</display>
 						</asserter>
 						<dateAsserted>
 							<xsl:for-each select="ns0:entered">
-								<xsl:variable name="var19_resultof_cast" as="xs:string" select="xs:string(xs:integer(fn:string(@value)))"/>
-								<xsl:variable name="var20_resultof_FMDateToHL_" as="xs:string?">
-									<xsl:call-template name="user:FMDateToHL7">
-										<xsl:with-param name="FMdate" select="$var19_resultof_cast" as="xs:string"/>
-									</xsl:call-template>
-								</xsl:variable>
-								<xsl:if test="fn:exists($var20_resultof_FMDateToHL_)">
-									<xsl:attribute name="value" namespace="" select="$var20_resultof_FMDateToHL_"/>
-								</xsl:if>
+								<xsl:variable name="var20_resultof_cast" as="xs:double" select="xs:double(xs:decimal('2'))"/>
+								<xsl:variable name="var21_resultof_cast" as="xs:string" select="xs:string(xs:integer(fn:string(@value)))"/>
+								<xsl:variable name="var22_resultof_concat" as="xs:string" select="fn:concat(fn:concat(fn:concat(fn:concat(xs:string((xs:double(fn:substring($var21_resultof_cast, xs:double(xs:decimal('1')), xs:double(xs:decimal('3')))) + xs:double('1700'))), '-'), fn:substring($var21_resultof_cast, xs:double(xs:decimal('4')), $var20_resultof_cast)), '-'), fn:substring($var21_resultof_cast, xs:double(xs:decimal('6')), $var20_resultof_cast))"/>
+								<xsl:attribute name="value" namespace="" select="$var22_resultof_concat"/>
 							</xsl:for-each>
 						</dateAsserted>
 						<code>
@@ -205,14 +190,14 @@ http://www.altova.com/mapforce
 								</system>
 								<code>
 									<xsl:for-each select="ns0:icd">
-										<xsl:attribute name="value" namespace="" select="xs:string(xs:decimal(fn:string(@value)))"/>
+										<xsl:attribute name="value" namespace="" select="fn:string(@value)"/>
 									</xsl:for-each>
 								</code>
 							</coding>
 							<text>
 								<xsl:for-each select="ns0:name">
-									<xsl:variable name="var21_resultof_cast" as="xs:string" select="fn:string(@value)"/>
-									<xsl:attribute name="value" namespace="" select="$var21_resultof_cast"/>
+									<xsl:variable name="var23_resultof_cast" as="xs:string" select="fn:string(@value)"/>
+									<xsl:attribute name="value" namespace="" select="$var23_resultof_cast"/>
 								</xsl:for-each>
 							</text>
 						</code>
@@ -220,7 +205,7 @@ http://www.altova.com/mapforce
 							<xsl:attribute name="id" namespace="" select="'problem'"/>
 						</category>
 						<xsl:for-each select="ns0:status">
-							<xsl:variable name="var22_resultof_cast" as="xs:string" select="fn:string(@name)"/>
+							<xsl:variable name="var24_resultof_cast" as="xs:string" select="fn:string(@name)"/>
 							<status>
 								<coding>
 									<system>
@@ -230,23 +215,23 @@ http://www.altova.com/mapforce
 										<xsl:attribute name="value" namespace="" select="fn:string(@code)"/>
 									</code>
 									<display>
-										<xsl:attribute name="value" namespace="" select="$var22_resultof_cast"/>
+										<xsl:attribute name="value" namespace="" select="$var24_resultof_cast"/>
 									</display>
 								</coding>
 								<text>
-									<xsl:attribute name="value" namespace="" select="$var22_resultof_cast"/>
+									<xsl:attribute name="value" namespace="" select="$var24_resultof_cast"/>
 								</text>
 							</status>
 						</xsl:for-each>
 						<certainty>
 							<coding>
 								<system>
-									<xsl:if test="fn:exists($var5_unverified)">
+									<xsl:if test="fn:exists($var7_unverified)">
 										<xsl:attribute name="value" namespace="" select="xs:string(xs:anyURI('verified'))"/>
 									</xsl:if>
 								</system>
 								<code>
-									<xsl:for-each select="$var5_unverified">
+									<xsl:for-each select="$var7_unverified">
 										<xsl:attribute name="value" namespace="">
 											<xsl:call-template name="vmf:vmf1_inputtoresult">
 												<xsl:with-param name="input" select="xs:string(xs:integer(fn:string(@value)))" as="xs:string"/>
@@ -264,15 +249,10 @@ http://www.altova.com/mapforce
 						</certainty>
 						<onsetDate>
 							<xsl:for-each select="ns0:onset">
-								<xsl:variable name="var23_resultof_cast" as="xs:string" select="xs:string(xs:integer(fn:string(@value)))"/>
-								<xsl:variable name="var24_resultof_FMDateToHL_" as="xs:string?">
-									<xsl:call-template name="user:FMDateToHL7">
-										<xsl:with-param name="FMdate" select="$var23_resultof_cast" as="xs:string"/>
-									</xsl:call-template>
-								</xsl:variable>
-								<xsl:if test="fn:exists($var24_resultof_FMDateToHL_)">
-									<xsl:attribute name="value" namespace="" select="$var24_resultof_FMDateToHL_"/>
-								</xsl:if>
+								<xsl:variable name="var25_resultof_cast" as="xs:double" select="xs:double(xs:decimal('2'))"/>
+								<xsl:variable name="var26_resultof_cast" as="xs:string" select="xs:string(xs:integer(fn:string(@value)))"/>
+								<xsl:variable name="var27_resultof_concat" as="xs:string" select="fn:concat(fn:concat(fn:concat(fn:concat(xs:string((xs:double(fn:substring($var26_resultof_cast, xs:double(xs:decimal('1')), xs:double(xs:decimal('3')))) + xs:double('1700'))), '-'), fn:substring($var26_resultof_cast, xs:double(xs:decimal('4')), $var25_resultof_cast)), '-'), fn:substring($var26_resultof_cast, xs:double(xs:decimal('6')), $var25_resultof_cast))"/>
+								<xsl:attribute name="value" namespace="" select="$var27_resultof_concat"/>
 							</xsl:for-each>
 						</onsetDate>
 						<abatementBoolean>

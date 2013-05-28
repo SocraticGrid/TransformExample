@@ -68,6 +68,14 @@
                 </bean>
             </list>
         </property>
+        <property name="namespaceList">
+            <list>
+                <bean class="org.socraticgrid.fhirlib.XMLNamespace">
+                    <property name="prefix" value="test"/>
+                    <property name="uRI" value="http:test.org"/>
+                </bean>
+            </list>
+        </property>
     </bean>
     
     <bean name="MDWS2FHIR_Meds" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
