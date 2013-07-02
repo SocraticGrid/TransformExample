@@ -37,7 +37,7 @@
         </property>
     </bean>
 
-    <bean name="XML2JSONXform" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="XML2JSONXform" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="xml-to-json.xsl"/>          
@@ -78,42 +78,42 @@
         </property>
     </bean>
     
-    <bean name="MDWS2FHIR_Meds" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="MDWS2FHIR_Meds" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="MDWSToFHIR_Prescriptions.xslt"/>
             </bean>
         </property>
     </bean>
-    <bean name="MDWS2FHIR_Problems" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="MDWS2FHIR_Problems" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="MDWSToFHIR_Problems.xslt"/>          
             </bean>
         </property>
     </bean>
-    <bean name="MDWS2FHIR_Patient" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="MDWS2FHIR_Patient" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="MDWSToFHIR_Patient.xslt"/>
             </bean>
         </property>
     </bean>
-    <bean name="FHIR2Display_Problems" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="FHIR2Display_Problems" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="FHIRToJSONFact_Problems.xslt"/>
             </bean>
         </property>
     </bean>
-    <bean name="FHIR2Display_Meds" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="FHIR2Display_Meds" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet">
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="FHIRToJSONFact_Meds.xslt"/>
             </bean>
         </property>
     </bean>
-    <bean name="FHIR2Display_Demographic" class="org.socraticgrid.documenttransformer.XSLTTransformStep">
+    <bean name="FHIR2Display_Demographic" class="org.socraticgrid.documenttransformer.transfromsteps.XSLTTransformStep">
         <property name="xsltStyleSheet"> 
             <bean class="org.springframework.core.io.ClassPathResource">
                 <constructor-arg value="FHIRToJSONFact_Demographic.xslt"/>
@@ -121,7 +121,7 @@
         </property>
     </bean>
     
-    <bean name="Demographics" class="org.socraticgrid.documenttransformer.TransformPipeline">
+    <bean name="Demographics" class="org.socraticgrid.documenttransformer.SerialTransformPipeline">
         <property name="transformChain">
             <list>
                 <ref bean="MDWS2FHIR_Patient" />
@@ -131,7 +131,7 @@
         </property>
     </bean>
 
-    <bean name="Medications" class="org.socraticgrid.documenttransformer.TransformPipeline">
+    <bean name="Medications" class="org.socraticgrid.documenttransformer.SerialTransformPipeline">
         <property name="transformChain">
             <list>
                 <ref bean="MDWS2FHIR_Meds" />
@@ -143,7 +143,7 @@
     </bean>
     
     
-    <bean name="Problems" class="org.socraticgrid.documenttransformer.TransformPipeline">
+    <bean name="Problems" class="org.socraticgrid.documenttransformer.SerialTransformPipeline">
         <property name="transformChain">
             <list>
                 <ref bean="MDWS2FHIR_Problems" />

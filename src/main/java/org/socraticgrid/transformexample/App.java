@@ -1,6 +1,7 @@
 package org.socraticgrid.transformexample;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.socraticgrid.documenttransformer.Transformer;
@@ -22,16 +23,17 @@ public class App
         Transformer tx = (Transformer) ctx.getBean("Xform");
         Resource res = new ClassPathResource("PatientDataRequest_meds_10013.xml");
 
-        String result = "";
         try
         {
-            result = tx.transform("Medications", res.getInputStream());
+            InputStream ris = tx.transformAsStream("Medications", res.getInputStream(), null);
+            org.apache.commons.io.IOUtils.copy(ris, System.out);
+            
         }
         catch (IOException ex)
         {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(result);
+    
 
     }
 }
